@@ -65,26 +65,6 @@ Route::get('/oauth/clients', function () {
     return response()->json($clients);
 });
 Route::post('/oauth/clients', function(Request $request){
-    // $input = request()->validate([
-    //     'name' => ['required','string'],
-    //     'id' => ['required','string'],
-    //     'pro' => ['required','string']
-    // ]);
-    $create = \Laravel\Passport\ClientRepository::create($request->user_id, $request->name, $request->url, null, false, false, true);
-    $client = Client::where('id', $create->id)->first(['id', 'name', 'secret']);
-    $client->secret = $create->getPlainSecretAttribute();
-    // $client = new Client;
-    // $client->
-    // $data = [
-    // 'user_id' => Str::random(40),
-    // 'name' => $request->name,
-    // 'secret' => Str::random(40),
-    // 'redirect' => $this->faker->url(),
-    // 'personal_access_client' => false,
-    // 'password_client' => false,
-    // 'revoked' => false,
-    // ];
-    // $client = \Laravel\Passport\Client::create($data);
-
-    return response()->json($client, 201);
+    $create = \Laravel\Passport\ClientRepository::create($request->user_id, $request->name, $request->url, null, false, false, true)->makeVisible('secret');
+    return response()->json($create, 201);
 });
